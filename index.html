@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Movie DataBase</title>
+</head>
+<body>
+    <div class="container text-center pt-5">
+        <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Enter movie name" aria-label="Recipient's username" aria-describedby="button-addon2" id="title">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" id="submit" type="button" id="button-addon2">Search</button>
+                </div>
+        </div>
+        <br>
+        <div id="movieDetails" align="center">
+            
+        </div>
+    </div>
+    <script>
+        const titleHandler = document.getElementById("title");
+        const submitHandler = document.getElementById("submit");
+        const movieDetailsHandler = document.getElementById("movieDetails");
+
+        submitHandler.addEventListener('click', function(){
+            console.log(titleHandler.value);
+            list(titleHandler.value);
+            const key = ''; //You api key
+            var url = ` http://www.omdbapi.com/?t=${titleHandler.value}&apikey=${key} `;
+            axios.get(url).then(function(response){
+                movieList = response.data;
+                console.log(movieList);
+                tableCreating(movieList);
+            });
+        });
+
+        function tableCreating(movieDetails) {
+            movieDetailsHandler.innerHTML = `
+                <div class="card" style="width: 23rem;" >
+                    <img src="${movieList.Poster}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                    <h3 class="card-title">${movieList.Title} <span style="font-size: 14px">(${movieList.Year})</span></h3>
+                    <p class="card-text">${movieList.Plot}.</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><b>Director: </b>${movieList.Director} </li>
+                    <li class="list-group-item"><b>Writer: </b>${movieList.Writer}</li>
+                    <li class="list-group-item"><b>Actors: </b>${movieList.Actors} </li>
+                    </ul>
+                    <div class="card-body">
+                    <a href="https://www.imdb.com/title/${movieList.imdbID}" class="card-link">IMDB Rating: ${movieList.imdbRating}</a>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+
+</body>
+</html>
